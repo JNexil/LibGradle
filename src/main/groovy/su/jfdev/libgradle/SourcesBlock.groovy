@@ -2,17 +2,15 @@ package su.jfdev.libgradle
 
 import org.gradle.api.Project
 import su.jfdev.libbinder.BindProvider
-import su.jfdev.libbinder.MissingBindException
 import su.jfdev.libbinder.items.Source
-
 /**
  * Jamefrus and his team on 30.05.2016.
  */
 class SourcesBlock {
     Project project
-    BindProvider from
+    BindProvider provider
 
-    void from(String alias) {
+    void from(Object alias) {
         sources(alias).forEach { source ->
             project.repositories.maven {
                 url = source.url
@@ -24,17 +22,19 @@ class SourcesBlock {
         }
     }
 
-    void to(String alias, Closure customize = {}) {
+    void to(Object alias, Closure customize = {}) {
         sources(alias).forEach {
             addTO(it, customize)
         }
     }
 
-    private Iterable<Source> sources(String name) {
+    private Iterable<Source> sources(Object source) {
+        if (source instanceof Source) return [source]
+        def alias = source.toString()
         try {
-            return [from.source(name)]
-        } catch (MissingBindException ignored) {
-            return from.sources(name)
+            return [provider.source(alias)]
+        } catch (Exception ignored) {
+            return provider.sources(alias)
         }
     }
 

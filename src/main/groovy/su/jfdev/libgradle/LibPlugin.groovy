@@ -20,10 +20,10 @@ class LibPlugin implements Plugin<Project> {
         improveBinding()
         project.repositories.jcenter()
         addBlock("reposources") {
-            new SourcesBlock(project: project, from: it)
+            new SourcesBlock(project: project, provider: it)
         }
         addBlock("libraries") {
-            new LibrariesBlock(project: project, from: it)
+            new LibrariesBlock(project: project, provider: it)
         }
     }
 
@@ -32,7 +32,8 @@ class LibPlugin implements Plugin<Project> {
     }
 
     private void addBlock(String name, Closure<Object> blockBuilder) {
-        project.extensions.extraProperties[name] = { BindProvider provider, Closure block ->
+        def emptyProvider = Binding.parse(Collections.emptyMap())
+        project.extensions.extraProperties[name] = { BindProvider provider = emptyProvider, Closure block ->
             block.delegate = blockBuilder(provider)
             block.resolveStrategy = Closure.DELEGATE_FIRST
             block.run()
