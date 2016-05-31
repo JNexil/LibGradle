@@ -1,0 +1,4 @@
+jfbintray {
+    url = "https://dl.bintray.com/jamefrus/JFDev"
+}
+gson = 'com.google.code.gson:gson:2.6.2'

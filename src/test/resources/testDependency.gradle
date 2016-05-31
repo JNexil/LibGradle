@@ -1,0 +1,18 @@
+plugins {
+    id "su.jfdev.librarian"
+}
+
+libraries(binder.parse(file("binding.gconfig"))) {
+    compile
+}
+
+task testing {
+    outputs.upToDateWhen { false }
+    doFirst {
+        assert dependencies.modules.any {
+            it.group == 'com.google.code.gson'
+            it.name == 'gson'
+            it.version == "2.6.2"
+        }
+    }
+}

@@ -1,0 +1,16 @@
+plugins {
+    id "su.jfdev.librarian"
+}
+
+reposources(binder.parse(file("binding.gconfig"))) {
+    from "jfbintray"
+}
+
+task testing {
+    outputs.upToDateWhen { false }
+    doFirst {
+        assert repositories.any {
+            ("https://dl.bintray.com/jamefrus/JFDev" == it.url.toString())
+        }
+    }
+}
