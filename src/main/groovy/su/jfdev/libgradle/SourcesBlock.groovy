@@ -3,6 +3,7 @@ package su.jfdev.libgradle
 import org.gradle.api.Project
 import su.jfdev.libbinder.BindProvider
 import su.jfdev.libbinder.items.Source
+
 /**
  * Jamefrus and his team on 30.05.2016.
  */
@@ -12,12 +13,16 @@ class SourcesBlock {
 
     void from(Object alias) {
         sources(alias).forEach { source ->
-            project.repositories.maven {
-                url = source.url
-                credentials {
-                    username = source.username
-                    password = source.password
-                }
+            typedRepository(project.repositories, source)
+        }
+    }
+
+    private static void typedRepository(Object self, Source source) {
+        self.invokeMethod(source.type) {
+            url = source.url
+            credentials {
+                username = source.username
+                password = source.password
             }
         }
     }
@@ -31,23 +36,21 @@ class SourcesBlock {
     private Iterable<Source> sources(Object source) {
         if (source instanceof Source) return [source]
         def alias = source.toString()
-        try {
-            return [provider.source(alias)]
-        } catch (Exception ignored) {
-            return provider.sources(alias)
-        }
+        return provider.sources(alias)
     }
 
     private void addTO(Source source, Closure customize) {
         project.uploadArchives {
-            repositories.mavenDeployer {
-                customize.setDelegate(getThisObject())
-                customize.setResolveStrategy(DELEGATE_FIRST)
-                customize.run()
-                repository(url: source.url) {
-                    authentication(userName: source.password, password: source.username)
+            if (source.type == "maven") {
+                repositories.mavenDeployer {
+                    customize.setDelegate(getThisObject())
+                    customize.setResolveStrategy(DELEGATE_FIRST)
+                    customize.run()
+                    repository(url: source.url) {
+                        authentication(userName: source.password, password: source.username)
+                    }
                 }
-            }
+            } else typedRepository(repositories, source)
         }
     }
 }

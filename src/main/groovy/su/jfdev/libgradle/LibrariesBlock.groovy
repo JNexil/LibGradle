@@ -34,11 +34,7 @@ class LibrariesBlock {
     private Iterable<Library> libraries(Object library) {
         if (library instanceof Library) return [library]
         def alias = library.toString()
-        try {
-            return [provider.library(alias)]
-        } catch (Exception ignored) {
-            return provider.libraries(alias)
-        }
+        return provider.libraries(alias)
     }
 
 }
