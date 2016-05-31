@@ -1,15 +1,16 @@
 plugins {
     id "su.jfdev.librarian"
 }
+apply plugin: 'java'
 
 libraries(binder.parse(file("binding.gconfig"))) {
-    compile
+    compile "gson"
 }
 
 task testing {
     outputs.upToDateWhen { false }
     doFirst {
-        assert dependencies.modules.any {
+        assert configurations.compile.allDependencies.any {
             it.group == 'com.google.code.gson'
             it.name == 'gson'
             it.version == "2.6.2"

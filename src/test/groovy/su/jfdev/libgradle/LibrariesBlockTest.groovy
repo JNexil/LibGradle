@@ -23,8 +23,8 @@ class LibrariesBlockTest {
     public void 'can invoke methods with configuration\'s name'() throws Exception {
         Project project = mockProject()
         provider = Binding.parse([any: "group:name:version"])
-        def block = new LibrariesBlock(project: project, from: provider)
-        block.compile "any"
+        def block = new LibrariesBlock(project: project, provider: provider)
+        block.compile("any"){}
     }
 
     public Project mockProject() {
