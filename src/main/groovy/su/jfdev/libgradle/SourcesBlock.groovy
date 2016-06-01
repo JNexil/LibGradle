@@ -18,7 +18,7 @@ class SourcesBlock {
     }
 
     private static void typedRepository(Object self, Source source) {
-        self.invokeMethod(source.type) {
+        self.invokeMethod(source.type ?: "maven") {
             url = source.url
             credentials {
                 username = source.username
@@ -41,7 +41,7 @@ class SourcesBlock {
 
     private void addTO(Source source, Closure customize) {
         project.uploadArchives {
-            if (source.type == "maven") {
+            if (source.type == null || source.type == "maven") {
                 repositories.mavenDeployer {
                     customize.setDelegate(getThisObject())
                     customize.setResolveStrategy(DELEGATE_FIRST)
