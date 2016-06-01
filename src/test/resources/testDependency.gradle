@@ -3,7 +3,8 @@ plugins {
 }
 apply plugin: 'java'
 
-libraries(binder.file("binding.gconfig")) {
+def binding = binder.parse(file("binding.gconfig"))
+libraries(binding) {
     compile "gson"
 }
 

@@ -2,7 +2,7 @@ plugins {
     id "su.jfdev.librarian"
 }
 
-reposources(binder.file("binding.gconfig")) {
+reposources(binder.parse(file("binding.gconfig"))) {
     from "jfbintray"
 }
 
