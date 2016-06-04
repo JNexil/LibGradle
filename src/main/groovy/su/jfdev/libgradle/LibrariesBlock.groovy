@@ -23,7 +23,7 @@ class LibrariesBlock {
             Iterable<Library> libraries = libraries(library)
             Dependency last = null
             for (lib in libraries) {
-                last = project.dependencies.add(name, lib.map, closure)
+                last = project.dependencies.add(name, lib.properties, closure)
             }
             return last
         }
